@@ -12,7 +12,7 @@ A new route `/editorial` with two tabs:
 AI-powered reviewer recommendations ranked by semantic 
 similarity between the paper abstract and reviewer bio.
 
-![Find Reviewers](screenshots/find_reviewers.png)
+<img width="1314" height="963" alt="Screenshot 2026-03-20 004515" src="https://github.com/user-attachments/assets/0848e464-67ba-46bc-b225-a5693a5f225c" />
 
 - Enter Article ID + Community ID
 - Click Find Best Reviewers
@@ -24,7 +24,8 @@ similarity between the paper abstract and reviewer bio.
 Full editorial workflow panel showing reviewer 
 progress and decision management.
 
-![Editorial Status](screenshots/editorial_status.png)
+<img width="1892" height="1009" alt="Screenshot 2026-03-20 004453" src="https://github.com/user-attachments/assets/bac32542-1a37-41b6-96ae-b3a9bc8c217b" />
+
 
 **Reviewer Status** — workflow stepper showing each 
 reviewer's position in the Kotahi status flow:
@@ -37,7 +38,8 @@ Declined reviewers shown separately.
 - Comments to author
 - Decision history
 
-![Decision Panel](screenshots/decision_panel.png)
+<img width="1897" height="894" alt="Screenshot 2026-03-20 004434" src="https://github.com/user-attachments/assets/85e30acb-4d1f-4d42-9b49-fffce5b72961" />
+
 
 ## New files
 ```
