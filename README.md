@@ -1,50 +1,88 @@
-<p align="center">
-  <img src="https://cdn.scicommons.org/logo.png" alt="SciCommons Logo" width="150">
-</p>
+# SciCommons Frontend — GSoC 2026 PoC
 
----
+Next.js 14 frontend for SciCommons. This branch 
+(`gsoc-2026-poc`) adds an Editorial Dashboard 
+implementing a Kotahi-inspired workflow.
 
-## 📢 Feature List for SciCommons GSoC 2025 is Now Available!
-> You can access it here:  
-> 🔗 [GSoC 2025 Feature List](https://github.com/m2b3/SciCommons-frontend/blob/main/gsoc/GSoC_2025_Feature_List.md)
+## What this PoC adds
 
+A new route `/editorial` with two tabs:
 
-### **Please follow our [Contribution guide](https://github.com/m2b3/SciCommons-frontend/blob/main/CONTRIBUTING.md) to start contributing to this repo.**
+### Tab 1 — Find Reviewers
+AI-powered reviewer recommendations ranked by semantic 
+similarity between the paper abstract and reviewer bio.
 
+![Find Reviewers](screenshots/find_reviewers.png)
 
-## Getting Started
+- Enter Article ID + Community ID
+- Click Find Best Reviewers
+- See ranked reviewer cards with match percentages
+- Click Invite to create a ReviewerInvitation record
+- Card transitions from Invite button to status pill
 
-Create .env file with following environments:
+### Tab 2 — Editorial Status
+Full editorial workflow panel showing reviewer 
+progress and decision management.
 
-```bash
-NEXT_PUBLIC_BACKEND_URL="http://127.0.0.1:8000"
-NEXT_PUBLIC_REALTIME_URL="http://localhost:8888"
+![Editorial Status](screenshots/editorial_status.png)
+
+**Reviewer Status** — workflow stepper showing each 
+reviewer's position in the Kotahi status flow:
+`Invited → Accepted → In Progress → Completed`
+
+Declined reviewers shown separately.
+
+**Editorial Decision** — decision form with:
+- Accept / Minor Revision / Major Revision / Reject
+- Comments to author
+- Decision history
+
+![Decision Panel](screenshots/decision_panel.png)
+
+## New files
+```
+src/app/editorial/
+├── page.tsx           — two-tab dashboard
+├── ReviewerCard.tsx   — reviewer card with invite flow
+├── WorkflowStepper.tsx — Kotahi status stepper
+├── DecisionPanel.tsx  — decision form + history
+└── types.ts           — TypeScript interfaces
 ```
 
-Run the development server:
+## Architecture notes
 
+Informed by studying:
+- **Kotahi** — Team tab left-to-right reviewer progression,
+  Decision tab Submit + Publish button logic
+- **OJS** — submission tracking metrics
+
+## Setup
 ```bash
 # Install dependencies
-yarn install
+yarn install  
+# or
+npm install --legacy-peer-deps
 
-# Run server
+# Create env file
+echo "NEXT_PUBLIC_BACKEND_URL=http://localhost:8000" > .env.local
+echo "NEXT_PUBLIC_REALTIME_URL=http://localhost:8888" >> .env.local
+
+# Start dev server
 yarn dev
+
+# Open editorial dashboard
+open http://localhost:3000/editorial
 ```
 
-OR Running app in docker container
+## Stack
 
-```bash
-# Build docker image locally
-docker build . --build-arg NEXT_PUBLIC_BACKEND_URL=http://localhost:8000 -t scicommons-frontend:latest
+- Next.js 14 (App Router)
+- TypeScript
+- TanStack Query v5
+- ShadCN/UI
+- Tailwind CSS
 
-# Before running docker compose, update the docker image name in docker-compose.dev.yml file
-docker compose -f docker-compose.dev.yml up
+## Backend
 
-# detached mode
-docker compose -f docker-compose.dev.yml up -d
-```
-
-# Theming
-![SciCommons_Design_Pattern](https://github.com/user-attachments/assets/f8b57cd7-6488-487a-b06f-b5775dc86891)
-
-
+Requires the backend repo running:
+https://github.com/Yuvraj-018/My_SciCommons-backend/tree/gsoc-2026-poc
