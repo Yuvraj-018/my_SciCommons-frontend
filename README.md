@@ -27,7 +27,8 @@ implement the complete post-submission pipeline.
 
 ### Tab 1 — Find Reviewers
 
-![Find Reviewers](screenshots/find_reviewers.png)
+<img width="1314" height="963" alt="Screenshot 2026-03-20 004515" src="https://github.com/user-attachments/assets/debd834d-48ac-450b-9734-f9984da73f03" />
+
 
 Enter an Article ID and Community ID. The AI matching 
 endpoint ranks community members by semantic similarity 
@@ -42,7 +43,8 @@ to the paper abstract using locally-hosted embeddings.
 
 ### Tab 2 — Editorial Status
 
-![Editorial Status](screenshots/editorial_status.png)
+<img width="1897" height="894" alt="Screenshot 2026-03-20 004434" src="https://github.com/user-attachments/assets/0ead0066-2206-4b86-b149-bff26db6fd40" />
+
 
 **Submission overview** — single line showing reviewer 
 counts: invited, accepted, in progress, declined.
@@ -57,7 +59,8 @@ Declined reviewers shown in a separate section.
 
 **Editorial Decision**
 
-![Decision Panel](screenshots/decision_panel.png)
+<img width="1892" height="1009" alt="Screenshot 2026-03-20 004453" src="https://github.com/user-attachments/assets/d8846d1d-b9a1-4710-a95c-904b7df8cd22" />
+
 
 - Current article status badge
 - Decision form: Accept / Minor Revision / Major Revision / Reject
