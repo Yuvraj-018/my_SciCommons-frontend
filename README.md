@@ -1,68 +1,111 @@
 # SciCommons Frontend — GSoC 2026 PoC
 
-Next.js 14 frontend for SciCommons. This branch 
-(`gsoc-2026-poc`) adds an Editorial Dashboard 
-implementing a Kotahi-inspired workflow.
+Next.js 14 frontend for SciCommons. This branch adds an 
+Editorial Dashboard implementing a Kotahi-inspired 
+post-submission workflow.
 
-## What this PoC adds
+## What is SciCommons
 
-A new route `/editorial` with two tabs:
+SciCommons is an open peer review platform where 
+researchers submit papers to communities (acting as open 
+journals), receive expert reviews, and discuss research 
+publicly. Built by INCF over three GSoC cycles using 
+Next.js, Django-Ninja, and a real-time Tornado server.
+
+## The Problem
+
+The platform had no UI for anything that happens after 
+a paper is submitted. No editor could assign reviewers, 
+track review progress, or record a formal decision. 
+The `CommunityArticle` status field existed in the 
+database but nothing ever changed it.
+
+## What This PoC Adds
+
+A new route `/editorial` with two tabs that together 
+implement the complete post-submission pipeline.
 
 ### Tab 1 — Find Reviewers
-AI-powered reviewer recommendations ranked by semantic 
-similarity between the paper abstract and reviewer bio.
 
-<img width="1314" height="963" alt="Screenshot 2026-03-20 004515" src="https://github.com/user-attachments/assets/0848e464-67ba-46bc-b225-a5693a5f225c" />
+![Find Reviewers](screenshots/find_reviewers.png)
 
-- Enter Article ID + Community ID
-- Click Find Best Reviewers
-- See ranked reviewer cards with match percentages
-- Click Invite to create a ReviewerInvitation record
-- Card transitions from Invite button to status pill
+Enter an Article ID and Community ID. The AI matching 
+endpoint ranks community members by semantic similarity 
+to the paper abstract using locally-hosted embeddings.
+
+- Reviewer cards show match percentage with color-coded 
+  left border (green >70%, yellow 50–70%, gray below)
+- Invite button triggers a real API call — creates a 
+  `ReviewerInvitation` record in the database
+- Button transitions to a status pill on success
+- Page auto-switches to Editorial Status tab after invite
 
 ### Tab 2 — Editorial Status
-Full editorial workflow panel showing reviewer 
-progress and decision management.
 
-<img width="1892" height="1009" alt="Screenshot 2026-03-20 004453" src="https://github.com/user-attachments/assets/bac32542-1a37-41b6-96ae-b3a9bc8c217b" />
+![Editorial Status](screenshots/editorial_status.png)
 
+**Submission overview** — single line showing reviewer 
+counts: invited, accepted, in progress, declined.
 
-**Reviewer Status** — workflow stepper showing each 
-reviewer's position in the Kotahi status flow:
-`Invited → Accepted → In Progress → Completed`
+**Reviewer Status** — workflow stepper per reviewer 
+showing their position in Kotahi's status flow:
+```
+Invited → Accepted → In Progress → Completed
+```
 
-Declined reviewers shown separately.
+Declined reviewers shown in a separate section.
 
-**Editorial Decision** — decision form with:
-- Accept / Minor Revision / Major Revision / Reject
-- Comments to author
-- Decision history
+**Editorial Decision**
 
-<img width="1897" height="894" alt="Screenshot 2026-03-20 004434" src="https://github.com/user-attachments/assets/85e30acb-4d1f-4d42-9b49-fffce5b72961" />
+![Decision Panel](screenshots/decision_panel.png)
 
+- Current article status badge
+- Decision form: Accept / Minor Revision / Major Revision / Reject
+- Comments to author textarea
+- Decision history showing past verdicts
 
-## New files
+Accept transitions status to `accepted` and enables 
+publishing. Revise returns to `under_review`. Reject 
+ends the active review cycle.
+
+## New Files
 ```
 src/app/editorial/
-├── page.tsx           — two-tab dashboard
-├── ReviewerCard.tsx   — reviewer card with invite flow
-├── WorkflowStepper.tsx — Kotahi status stepper
-├── DecisionPanel.tsx  — decision form + history
-└── types.ts           — TypeScript interfaces
+├── page.tsx              ← two-tab dashboard
+├── ReviewerCard.tsx      ← card with invite mutation
+├── WorkflowStepper.tsx   ← Kotahi status stepper
+├── DecisionPanel.tsx     ← decision form + history
+└── types.ts              ← TypeScript interfaces
 ```
 
-## Architecture notes
+## Architecture Notes
 
-Informed by studying:
-- **Kotahi** — Team tab left-to-right reviewer progression,
-  Decision tab Submit + Publish button logic
-- **OJS** — submission tracking metrics
+**TanStack Query v5** for all data fetching:
+- `enabled: false` on suggestions query — only fetches 
+  on button click, not on mount
+- `useMutation` for invite — handles loading, error, 
+  and success states without manual state management
+- Auto-refetch of editorial status after every invite 
+  or decision
 
-## Setup
+**No new npm packages** — uses only what was already 
+in `package.json`. Badge styling via Tailwind classes 
+rather than importing a Badge component.
+
+## Known Limitations
+
+- `community_article_id` hardcoded to 1 — seed data 
+  creates exactly one CommunityArticle
+- No authentication on invite/decision actions — any 
+  user can invite reviewers in the PoC
+- WorkflowStepper shows all community members including 
+  those invited via curl tests during development
+- Dark theme applied — light mode users will see the 
+  full SciCommons dark theme on this route
+
+## Quick Start
 ```bash
 # Install dependencies
-yarn install  
-# or
 npm install --legacy-peer-deps
 
 # Create env file
@@ -70,21 +113,23 @@ echo "NEXT_PUBLIC_BACKEND_URL=http://localhost:8000" > .env.local
 echo "NEXT_PUBLIC_REALTIME_URL=http://localhost:8888" >> .env.local
 
 # Start dev server
-yarn dev
+npm run dev
 
 # Open editorial dashboard
 open http://localhost:3000/editorial
 ```
 
+Requires backend running:
+https://github.com/Yuvraj-018/My_SciCommons-backend/tree/gsoc-2026-poc
+
 ## Stack
 
 - Next.js 14 (App Router)
-- TypeScript
+- TypeScript (strict)
 - TanStack Query v5
-- ShadCN/UI
+- ShadCN/UI (local components)
 - Tailwind CSS
 
-## Backend
+## GSoC 2026 — INCF, Project #18
 
-Requires the backend repo running:
-https://github.com/Yuvraj-018/My_SciCommons-backend/tree/gsoc-2026-poc
+Mentors: Armaan Alam, Mohd Faisal Ansari, Suresh Krishna
