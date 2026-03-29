@@ -27,7 +27,7 @@ implement the complete post-submission pipeline.
 
 ### Tab 1 — Find Reviewers
 
-<img width="1314" height="963" alt="Screenshot 2026-03-20 004515" src="https://github.com/user-attachments/assets/debd834d-48ac-450b-9734-f9984da73f03" />
+<img width="2402" height="1641" alt="Gemini_Generated_Image_ti5f5gti5f5gti5f" src="https://github.com/user-attachments/assets/ce6984a6-21d1-4c3d-bdda-0b5a4dc7c3e1" />
 
 
 Enter an Article ID and Community ID. The AI matching 
